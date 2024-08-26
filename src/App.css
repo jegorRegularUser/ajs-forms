@@ -41,3 +41,8 @@
   padding: 13px 0;
 background-color: rgba(0, 0, 0, 0.1);
 }
+.steps{
+  width: 30%;
+  height: 400px;
+  margin: 100px auto;
+}

@@ -24,7 +24,7 @@ function Convertor() {
     <div className="convertor" style={{background:value}}>
       <div className="input">
       <input maxLength={7} ref={inputValue} onChange={()=>{if(inputValue.current.value.length===7){setValue(inputValue.current.value)}}}/>
-      <div>{hex2RGB(value)}</div>
+      <div style={{color:value==='#000000'? 'white':'black'}}>{hex2RGB(value)}</div>
       </div>
 
     </div>

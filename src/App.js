@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import Store from "./components/steps/Store";
+import Steps from "./components/steps/Steps";
 import Convertor from "./components/hex2rgb/Convertor";
 
 function App() {
@@ -20,8 +20,8 @@ function App() {
     <div className="App">
       <div className="tollbar">{btns}</div>
       {selected==="hex2rgb" && <Convertor />}
-      {selected==="steps" && <Store/> }
-      {selected==="photo" && <Store/> }
+      {selected==="steps" && <Steps/> }
+      {selected==="photo" && <Steps/> }
     </div>
   );
 }
