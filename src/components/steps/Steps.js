@@ -7,6 +7,7 @@ function Steps() {
     distance: "",
   });
   const [data, setData] = useState([]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const { date, distance } = form;
@@ -25,36 +26,34 @@ function Steps() {
       console.log("Пожалуйста, введите корректную дату (ДД.ММ.ГГГГ).");
       return;
     }
+    
     const record = { date: [day, month, year], distance: +distance };
-    if (data.findIndex((el) =>  el.date.join() === record.date.join()) === -1) {
-      setData((prevData) => ([
-        ...prevData,
-        record,
-      ]));
-    } else {
-      setData((prevData) => {
-        console.log('раз');
-      prevData[prevData.findIndex(el=>el.date.join() === record.date.join())].distance+=record.distance
-        return prevData
-        });
-    }
-    setData((prevData) =>{
 
-      return prevData.sort((a, b) => {
+    setData((prevData) => {
+      const index = prevData.findIndex(el => el.date.join() === record.date.join());
+      let updatedData;
+
+      if (index === -1) {
+        updatedData = [...prevData, record];
+      } else {
+        prevData[index].distance += record.distance;
+        updatedData = [...prevData];
+      }
+
+      // Сортировка данных
+      return updatedData.sort((a, b) => {
         const [dayA, monthA, yearA] = a.date;
         const [dayB, monthB, yearB] = b.date;
 
-        if (yearA !== yearB) {
-          return yearB - yearA;
-        }
-        if (monthA !== monthB) {
-          return monthB - monthA;
-        }
+        if (yearA !== yearB) return yearB - yearA;
+        if (monthA !== monthB) return monthB - monthA;
         return dayB - dayA;
-      })
+      });
     });
+
     setForm({ date: "", distance: "" });
   };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({
@@ -62,14 +61,9 @@ function Steps() {
       [name]: value,
     }));
   };
-  const handleDelete = (index) => {
-    const updatedData = [...data];
 
-    updatedData.splice(
-      updatedData.findIndex((el) => (el.date = index)),
-      1
-    );
-    setData(updatedData);
+  const handleDelete = (dateToDelete) => {
+    setData((prevData) => prevData.filter(item => item.date.join() !== dateToDelete.join()));
   };
 
   return (
