@@ -7,8 +7,10 @@ function Steps() {
     distance: "",
   });
   const [data, setData] = useState([]);
-
+const [dateInvalid, setDateInvalid] = useState(false);
+const [distanceInvalid, setDistanceInvalid] = useState(false)
   const handleSubmit = (e) => {
+
     e.preventDefault();
     const { date, distance } = form;
     const [day, month, year] = date.split(".").map(Number);
@@ -20,27 +22,36 @@ function Steps() {
       day < 1 ||
       day > 31 ||
       month < 1 ||
-      month > 12 ||
-      distance === ""
+      month > 12 
     ) {
-      console.log("Пожалуйста, введите корректную дату (ДД.ММ.ГГГГ).");
+      if(distance === ""){
+        setDistanceInvalid(true)
+      }
+      setDateInvalid(true)
+      return;
+    }
+    if(distance === ""){
+      setDistanceInvalid(true)
       return;
     }
     
     const record = { date: [day, month, year], distance: +distance };
 
     setData((prevData) => {
+
+
       const index = prevData.findIndex(el => el.date.join() === record.date.join());
       let updatedData;
 
       if (index === -1) {
+ 
         updatedData = [...prevData, record];
       } else {
         prevData[index].distance += record.distance;
         updatedData = [...prevData];
       }
 
-      // Сортировка данных
+
       return updatedData.sort((a, b) => {
         const [dayA, monthA, yearA] = a.date;
         const [dayB, monthB, yearB] = b.date;
@@ -56,6 +67,8 @@ function Steps() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    setDateInvalid(false);
+    setDistanceInvalid(false);
     setForm((prevForm) => ({
       ...prevForm,
       [name]: value,
@@ -69,7 +82,7 @@ function Steps() {
   return (
     <div className="steps">
       <form className="form" onSubmit={handleSubmit}>
-        <div>
+        <div className="input-wrap">
           <div>Дата (ДД.ММ.ГГ)</div>
           <input
             type="text"
@@ -78,8 +91,9 @@ function Steps() {
             onChange={handleInputChange}
             placeholder="ДД.ММ.ГГ"
           />
+          <div className={dateInvalid? 'invalid-text' : 'no-display'}>Проверьте корректность даты</div>
         </div>
-        <div>
+        <div className="input-wrap">
           <div>Пройдено км</div>
           <input
             type="text"
@@ -89,18 +103,19 @@ function Steps() {
             onChange={handleInputChange}
             placeholder="Км"
           />
+          <div className={distanceInvalid? 'invalid-text' : 'no-display'}>Необходимо ввести дистанцию</div>
         </div>
-        <button type="submit">OK</button>
+        <button type="submit" >OK</button>
       </form>
       <div className="list">
         <div className="titles">
-          <span>Дата (ДД.ММ.ГГГГ)</span>
+          <span>Дата (ДД.ММ.ГГ)</span>
           <span>Пройдено км</span>
           <span>Действия</span>
         </div>
         <ul>
           {data.map((item) => (
-            <li key={item.date.join(".")}>
+            <li key={item.date.join(".")} >
               <span>{item.date.join(".")}</span>
               <span>{item.distance.toFixed(1)}</span>
               <span>
