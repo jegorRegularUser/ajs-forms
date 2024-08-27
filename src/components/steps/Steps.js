@@ -7,10 +7,9 @@ function Steps() {
     distance: "",
   });
   const [data, setData] = useState([]);
-const [dateInvalid, setDateInvalid] = useState(false);
-const [distanceInvalid, setDistanceInvalid] = useState(false)
+  const [dateInvalid, setDateInvalid] = useState(false);
+  const [distanceInvalid, setDistanceInvalid] = useState(false);
   const handleSubmit = (e) => {
-
     e.preventDefault();
     const { date, distance } = form;
     const [day, month, year] = date.split(".").map(Number);
@@ -22,40 +21,43 @@ const [distanceInvalid, setDistanceInvalid] = useState(false)
       day < 1 ||
       day > 31 ||
       month < 1 ||
-      month > 12 
+      month > 12
     ) {
-      if(distance === ""){
-        setDistanceInvalid(true)
+      if (distance === "") {
+        setDistanceInvalid(true);
       }
-      setDateInvalid(true)
+      setDateInvalid(true);
       return;
     }
-    if(distance === ""){
-      setDistanceInvalid(true)
+    if (distance === "") {
+      setDistanceInvalid(true);
       return;
     }
-    
+
     const record = { date: [day, month, year], distance: +distance };
 
     setData((prevData) => {
-
-
-      const index = prevData.findIndex(el => el.date.join() === record.date.join());
-      let updatedData;
-
+      const index = prevData.findIndex(
+        (el) => el.date.join() === record.date.join()
+      );
+    
+      const updatedData = [...prevData];
+    
       if (index === -1) {
- 
-        updatedData = [...prevData, record];
+        updatedData.push(record);
       } else {
-        prevData[index].distance += record.distance;
-        updatedData = [...prevData];
-      }
+        const updatedRecord = {
+          ...updatedData[index],
+          distance: updatedData[index].distance + record.distance
+        };
 
+        updatedData[index] = updatedRecord;
+      }
 
       return updatedData.sort((a, b) => {
         const [dayA, monthA, yearA] = a.date;
         const [dayB, monthB, yearB] = b.date;
-
+    
         if (yearA !== yearB) return yearB - yearA;
         if (monthA !== monthB) return monthB - monthA;
         return dayB - dayA;
@@ -76,7 +78,9 @@ const [distanceInvalid, setDistanceInvalid] = useState(false)
   };
 
   const handleDelete = (dateToDelete) => {
-    setData((prevData) => prevData.filter(item => item.date.join() !== dateToDelete.join()));
+    setData((prevData) =>
+      prevData.filter((item) => item.date.join() !== dateToDelete.join())
+    );
   };
 
   return (
@@ -91,7 +95,9 @@ const [distanceInvalid, setDistanceInvalid] = useState(false)
             onChange={handleInputChange}
             placeholder="ДД.ММ.ГГ"
           />
-          <div className={dateInvalid? 'invalid-text' : 'no-display'}>Проверьте корректность даты</div>
+          <div className={dateInvalid ? "invalid-text" : "no-display"}>
+            Проверьте корректность даты
+          </div>
         </div>
         <div className="input-wrap">
           <div>Пройдено км</div>
@@ -103,9 +109,11 @@ const [distanceInvalid, setDistanceInvalid] = useState(false)
             onChange={handleInputChange}
             placeholder="Км"
           />
-          <div className={distanceInvalid? 'invalid-text' : 'no-display'}>Необходимо ввести дистанцию</div>
+          <div className={distanceInvalid ? "invalid-text" : "no-display"}>
+            Необходимо ввести дистанцию
+          </div>
         </div>
-        <button type="submit" >OK</button>
+        <button type="submit">OK</button>
       </form>
       <div className="list">
         <div className="titles">
@@ -115,7 +123,7 @@ const [distanceInvalid, setDistanceInvalid] = useState(false)
         </div>
         <ul>
           {data.map((item) => (
-            <li key={item.date.join(".")} >
+            <li key={item.date.join(".")}>
               <span>{item.date.join(".")}</span>
               <span>{item.distance.toFixed(1)}</span>
               <span>
